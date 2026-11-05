@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0759b5">
+<title>MY SALARY BOOK</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f6fc;color:#183653;font-family:Arial,sans-serif}
+header{background:linear-gradient(135deg,#064b9c,#1689ed);color:white;padding:24px 19px 30px;border-radius:0 0 27px 27px}
+.top{display:flex;justify-content:space-between;align-items:center}
+header h2{font-size:23px;margin:0}
+header p{font-size:12px;color:#d9ebff;margin:7px 0}
+.owner{background:#ffffff25;padding:8px 12px;border-radius:20px;font-size:12px}
+main{max-width:600px;margin:auto;padding:16px;padding-bottom:35px}
+.month{background:white;padding:13px;border-radius:13px;margin-top:-5px;box-shadow:0 4px 15px #0000000b}
+.month label{font-size:12px;color:#71839a}
+input{width:100%;padding:13px;border:1px solid #dce5f0;border-radius:10px;font-size:15px;margin:7px 0 15px;background:#fff;color:#183653}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
+.card{background:white;padding:17px 14px;border-radius:16px;box-shadow:0 3px 15px #173b6610}
+.card small{color:#75879a;font-size:12px}
+.card h2{font-size:23px;margin:9px 0 0}
+.blue{color:#1674d1}.orange{color:#e28b1a}.green{color:#11945b}.red{color:#db4d4d}
+.heading{font-size:17px;font-weight:bold;margin:23px 2px 13px}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.menu button{border:0;background:white;border-radius:16px;padding:19px 12px;text-align:left;box-shadow:0 3px 14px #173b6610;color:#19476f;min-height:105px}
+.ico{display:block;font-size:27px;margin-bottom:12px}
+.menu b{font-size:14px}
+.menu small{display:block;color:#8795a6;margin-top:5px;font-size:11px}
+.screen{display:none}
+.screen.active{display:block}
+.pagehead{display:flex;align-items:center;gap:13px;margin:4px 0 20px}
+.back{border:0;background:#e0edfc;color:#126bc6;padding:12px 15px;border-radius:11px;font-size:17px}
+.pagehead h2{margin:0;font-size:20px}
+.panel{background:white;border-radius:17px;padding:19px;margin-bottom:14px;box-shadow:0 3px 15px #173b6610}
+.panel h3{margin:0 0 17px;font-size:17px}
+label{font-size:13px;font-weight:bold;color:#4e6680}
+.primary{width:100%;border:0;border-radius:11px;padding:15px;background:linear-gradient(110deg,#0758b2,#1688eb);color:white;font-size:15px;font-weight:bold}
+.secondary{width:100%;border:0;border-radius:11px;padding:14px;background:#e7f1ff;color:#126bc6;font-weight:bold;margin-top:9px}
+.entry{padding:14px 0;border-bottom:1px solid #edf1f6;font-size:14px;line-height:1.8}
+.entry:last-child{border:0}
+.entry button{float:right;border:0;background:#fff0f0;color:#c33;border-radius:8px;padding:6px 9px}
+.muted{font-size:12px;color:#8493a5}
+.balance{background:#e9f5ff;padding:16px;border-radius:13px;margin-top:12px}
+.balance h2{color:#128253;margin:7px 0}
+.settings-row{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid #edf1f6}
+.settings-row span{font-size:23px}
+.settings-row div{flex:1}
+.settings-row b{font-size:14px}
+.settings-row small{display:block;color:#8190a2;margin-top:5px}
+
+body.auth-required header,body.auth-required main{display:none!important}
+body.auth-required #authScreen{display:block!important}
+#authScreen{display:none;min-height:100vh;padding:28px 18px;background:#f2f6fc}
+.auth-card{max-width:440px;margin:35px auto;background:white;padding:24px 20px;border-radius:22px;box-shadow:0 8px 30px #173b6615}
+.auth-logo{text-align:center;color:#0759b5;font-size:23px;font-weight:bold}
+.auth-sub{text-align:center;color:#8292a5;font-size:13px;margin:8px 0 23px}
+.auth-tabs{display:flex;gap:8px;margin-bottom:20px}
+.auth-tabs button{flex:1;padding:12px;border:0;border-radius:10px;background:#edf3fa;color:#42617e;font-weight:bold}
+.auth-tabs button.selected{background:#0759b5;color:white}
+.auth-card input{margin:8px 0 15px}
+.auth-card label{display:block}
+.auth-card .primary{margin-top:8px}
+.auth-error{font-size:13px;color:#d04444;line-height:1.5;margin:12px 0}
+#recaptcha-container{margin:12px 0;overflow:hidden}
+.auth-note{text-align:center;color:#8795a6;font-size:11px;margin-top:18px}
+
+</style>
+</head>
+<body class="auth-required">
+
+<section id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">💰 MY SALARY BOOK</div>
+    <div class="auth-sub">आपका अपना सुरक्षित सैलरी हिसाब</div>
+
+    <div class="auth-tabs">
+      <button id="registerTab" class="selected" onclick="toggleAuthMode('register')">नया Registration</button>
+      <button id="loginTab" onclick="toggleAuthMode('login')">Login</button>
+    </div>
+
+    <div id="registerPanel">
+      <label>मोबाइल नंबर</label>
+      <input id="regPhone" type="tel" placeholder="10 अंकों का मोबाइल नंबर">
+      <label>नया पासवर्ड</label>
+      <input id="regPassword" type="password" placeholder="कम से कम 6 अक्षर">
+      <label>पासवर्ड दोबारा लिखें</label>
+      <input id="regConfirmPassword" type="password" placeholder="पासवर्ड कन्फर्म करें">
+      <button class="primary" onclick="createAccount()">मोबाइल नंबर और पासवर्ड से अकाउंट बनाएँ</button>
+    </div>
+
+    <div id="loginPanel" style="display:none">
+      <label>मोबाइल नंबर</label>
+      <input id="loginPhone" type="tel" placeholder="Registration वाला मोबाइल नंबर">
+      <label>पासवर्ड</label>
+      <input id="loginPassword" type="password" placeholder="अपना पासवर्ड लिखें">
+      <button class="primary" onclick="loginApp()">Login करें</button>
+    </div>
+
+    <div id="authError" class="auth-error"></div>
+    <div class="auth-note">आपका डेटा आपके अपने Cloud अकाउंट में सुरक्षित रहेगा।</div>
+  </div>
+</section>
+
+<header>
+<div class="top">
+<div>
+<h2>💧 MY SALARY BOOK</h2>
+<p>आपका अपना सैलरी हिसाब</p>
+</div>
+<div class="owner">👤 PERSONAL <button onclick="logoutApp()" style="border:0;border-radius:8px;padding:6px;margin-left:5px">Logout</button></div>
+</div>
+</header>
+
+<main>
+<!-- DASHBOARD -->
+<section id="home" class="screen active">
+<div class="month">
+<label>📅 हिसाब का महीना</label>
+<input type="month" id="month" style="margin-bottom:0">
+</div>
+
+<div class="stats">
+<div class="card"><small>💰 महीने की सैलरी</small><h2 class="blue" id="salary">₹8,000</h2></div>
+<div class="card"><small>📤 कुल एडवांस</small><h2 class="orange" id="advance">₹0</h2></div>
+
+<div class="card"><small>✅ बाकी सैलरी</small><h2 class="green" id="remaining">₹8,000</h2></div>
+</div>
+
+<div class="heading">आपके मुख्य विकल्प</div>
+<div class="menu">
+<button onclick="openScreen('advanceScreen')"><span class="ico">➕</span><b>एडवांस जोड़ें</b><small>नया एडवांस दर्ज करें</small></button>
+<button onclick="openScreen('salaryScreen')"><span class="ico">💵</span><b>सैलरी प्राप्त करें</b><small>मिली हुई सैलरी दर्ज करें</small></button>
+<button onclick="openScreen('historyScreen')"><span class="ico">📋</span><b>हिसाब की हिस्ट्री</b><small>सभी लेन-देन देखें</small></button>
+
+<button onclick="openScreen('summaryScreen')"><span class="ico">📅</span><b>महीने का हिसाब</b><small>पूरी सैलरी का विवरण</small></button>
+<button onclick="openScreen('settingsScreen')"><span class="ico">⚙️</span><b>Settings</b><small>सैलरी और ऐप सेटिंग</small></button>
+</div>
+<p class="muted" style="text-align:center;margin-top:25px">MY SALARY BOOK • आपका अपना हिसाब</p>
+</section>
+
+<!-- ADVANCE -->
+<section id="advanceScreen" class="screen">
+<div class="pagehead"><button class="back" onclick="goHome()">←</button><h2>नया एडवांस</h2></div>
+<div class="panel">
+<h3>➕ एडवांस की जानकारी</h3>
+<label>कितने रुपये लिए?</label>
+<input id="amount" type="number" min="1" placeholder="₹ रकम लिखें">
+<label>किस लिए लिए?</label>
+<input id="reason" placeholder="जैसे घर खर्च, दवाई">
+<label>किस तारीख को लिए?</label>
+<input id="date" type="date">
+<button class="primary" onclick="addAdvance()">एडवांस सेव करें</button>
+</div>
+</section>
+
+<!-- SALARY -->
+<section id="salaryScreen" class="screen">
+<div class="pagehead"><button class="back" onclick="goHome()">←</button><h2>सैलरी प्राप्त करें</h2></div>
+<div class="panel">
+<h3>💵 सैलरी की जानकारी</h3>
+<label>कितने रुपये मिले?</label>
+<input id="received" type="number" min="1" placeholder="₹ रकम लिखें">
+<label>किस तारीख को मिले?</label>
+<input id="receivedDate" type="date">
+<button class="primary" onclick="receiveSalary()">सैलरी सेव करें</button>
+</div>
+</section>
+
+
+
+<!-- HISTORY -->
+<section id="historyScreen" class="screen">
+<div class="pagehead"><button class="back" onclick="goHome()">←</button><h2>हिसाब की हिस्ट्री</h2></div>
+<div class="panel">
+<h3>📋 सभी रिकॉर्ड</h3>
+<div id="history"></div>
+</div>
+</section>
+
+<!-- SUMMARY -->
+<section id="summaryScreen" class="screen">
+<div class="pagehead"><button class="back" onclick="goHome()">←</button><h2>महीने का हिसाब</h2></div>
+<div class="panel">
+<h3>📅 पूरा विवरण</h3>
+<div id="summaryText"></div>
+</div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settingsScreen" class="screen">
+<div class="pagehead"><button class="back" onclick="goHome()">←</button><h2>Settings</h2></div>
+<div class="panel">
+<h3>⚙️ आपकी सेटिंग</h3>
+<div class="settings-row"><span>💰</span><div><b>महीने की सैलरी बदलें</b><small>अपनी नई सैलरी सेट करें</small></div></div>
+<label>नई सैलरी (₹)</label>
+<input id="newSalary" type="number" min="0" placeholder="8000">
+<button class="primary" onclick="saveSalary()">सैलरी सेव करें</button>
+
+<div class="settings-row"><span>📅</span><div><b>सैलरी मिलने की तारीख</b><small>हर महीने किस तारीख को मिलती है</small></div></div>
+<label>तारीख (1 से 31)</label>
+<input id="salaryDay" type="number" min="1" max="31" placeholder="5">
+<button class="secondary" onclick="saveSalaryDay()">तारीख सेव करें</button>
+
+<div class="settings-row"><span>🌐</span><div><b>भाषा / Language</b><small>अपनी भाषा चुनें / Choose your language</small></div></div>
+<select id="languageSelect" onchange="changeLanguage(this.value)" style="width:100%;padding:13px;border:1px solid #d5e3f2;border-radius:10px;margin:8px 0 18px;font-size:16px">
+<option value="hi">हिंदी</option>
+<option value="en">English</option>
+</select>
+<div class="settings-row"><span>🔒</span><div><b>डेटा सुरक्षा</b><small>अभी डेटा इसी ब्राउज़र में सेव होता है</small></div></div>
+<p class="muted">पुराने महीने की सैलरी बदलने से दूसरे महीनों का रिकॉर्ड नहीं बदलेगा।</p>
+</div>
+</section>
+</main>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

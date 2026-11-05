@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MY SALARY BOOK</string>
+    <string name="title_activity_main">MY SALARY BOOK</string>
+    <string name="package_name">com.mysalarybook.app</string>
+    <string name="custom_url_scheme">com.mysalarybook.app</string>
+</resources>
